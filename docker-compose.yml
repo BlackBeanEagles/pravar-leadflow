@@ -1,0 +1,14 @@
+services:
+  leadflow:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_PATH: /app/data/leadflow.sqlite
+      AUTH_USERNAME: ${AUTH_USERNAME:-}
+      AUTH_PASSWORD: ${AUTH_PASSWORD:-}
+      AUTH_SECRET: ${AUTH_SECRET:-}
+    volumes:
+      - leadflow_data:/app/data
+volumes:
+  leadflow_data:
