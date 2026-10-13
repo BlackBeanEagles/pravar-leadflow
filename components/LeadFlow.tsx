@@ -77,13 +77,13 @@ function StatusBadge({ status }: { status: LeadStatus }) {
   return <span className={`status status-${status.toLowerCase().replaceAll(" ", "-")}`}><span className="status-dot" />{status}</span>;
 }
 
-function LeadCard({ lead, group, onOpen }: { lead: Lead; group: PriorityGroup; onOpen: (action: LeadAction) => void }) {
+function LeadCard({ lead, group, selected, onOpen }: { lead: Lead; group: PriorityGroup; selected?: boolean; onOpen: (action: LeadAction) => void }) {
   const moreRef = useRef<HTMLDetailsElement>(null);
   function quickAction(action: LeadAction) { if (moreRef.current) moreRef.current.open = false; onOpen(action); }
   const dueToday = group === "today";
   const overdue = group === "overdue";
   const followUp = validTime(lead.followUpAt) !== null ? lead.followUpAt : null;
-  return <div className={`lead-card ${dueToday ? "lead-card-today" : ""} ${overdue ? "lead-card-overdue" : ""}`}>
+  return <div className={`lead-card ${dueToday ? "lead-card-today" : ""} ${overdue ? "lead-card-overdue" : ""} ${selected ? "lead-card-selected" : ""}`}>
     <button className="lead-card-open" onClick={() => onOpen("view")} type="button" aria-label={`Open ${lead.name}'s timeline`}>
     <LeadAvatar name={lead.name} />
     <span className="lead-main">
@@ -145,13 +145,14 @@ function AddLeadDialog({ onClose, onCreated }: { onClose: () => void; onCreated:
   </ModalShell>;
 }
 
-function LeadDialog({ leadId, initialAction, onClose, onChanged, onNotice }: { leadId: number; initialAction: LeadAction; onClose: () => void; onChanged: (lead: LeadDetail) => void; onNotice: (message: string) => void }) {
+function LeadDialog({ leadId, initialAction, onClose, onChanged, onNotice, inline = false }: { leadId: number; initialAction: LeadAction; onClose: () => void; onChanged: (lead: LeadDetail) => void; onNotice: (message: string) => void; inline?: boolean }) {
   const [lead, setLead] = useState<LeadDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [note, setNote] = useState("");
   const [noteDate, setNoteDate] = useState("");
   const [noteTime, setNoteTime] = useState("");
   const noteRef = useRef<HTMLTextAreaElement>(null);
+  const timelineRef = useRef<HTMLDivElement>(null);
   const scheduleRef = useRef<HTMLInputElement>(null);
   const statusRef = useRef<HTMLSelectElement>(null);
   const [showSchedule, setShowSchedule] = useState(initialAction === "reschedule");
@@ -192,20 +193,19 @@ function LeadDialog({ leadId, initialAction, onClose, onChanged, onNotice }: { l
     catch (error) { setError((error as Error).message); }
     finally { setScheduleSaving(false); }
   }
-  return <ModalShell title="Lead discussion timeline" onClose={onClose} wide>
-    <div className="detail-layout"><aside className="detail-aside"><div className="detail-aside-top"><span className="eyebrow">LEAD PROFILE</span><button className="icon-button detail-close" aria-label="Close" onClick={onClose}><X size={19} /></button></div><LeadAvatar name={lead?.name || "…"} large /><h2>{lead?.name || (loading ? "Loading…" : "Lead unavailable")}</h2><p className="detail-company">{lead?.company || "No company added"}</p>
+  const content = <div className="detail-layout"><aside className="detail-aside"><div className="detail-aside-top"><span className="eyebrow">LEAD PROFILE</span><button className="icon-button detail-close" aria-label="Close" onClick={onClose}><X size={19} /></button></div><LeadAvatar name={lead?.name || "…"} large /><h2>{lead?.name || (loading ? "Loading…" : "Lead unavailable")}</h2><p className="detail-company">{lead?.company || "No company added"}</p>
       {lead && <><div className="detail-field"><span className="field-caption">PHONE</span>{lead.phone ? <a href={`tel:${lead.phone}`}><Phone size={15} />{lead.phone}</a> : <span>Not added</span>}</div><div className="detail-field"><span className="field-caption">CURRENT STATUS</span><select ref={statusRef} aria-label="Lead status" value={lead.status} onChange={(event) => changeStatus(event.target.value as LeadStatus)}>{statuses.map((status) => <option key={status}>{status}</option>)}</select></div><div className="detail-field next-follow"><span className="field-caption">NEXT FOLLOW-UP</span><strong className={lead.followUpAt && isOverdue(lead.followUpAt) ? "due-red" : ""}>{lead.followUpAt ? formatDate(lead.followUpAt) : "Not scheduled"}</strong><button className="schedule-toggle" type="button" onClick={() => { setScheduleAt(lead.followUpAt ? localDateTime(lead.followUpAt) : ""); setShowSchedule((value) => !value); }}>{lead.followUpAt ? "Reschedule" : "Schedule a follow-up"}</button></div></>}
       <p className="aside-caption">Keep the context. Move the conversation forward.</p></aside>
     <div className="detail-main">{lead && <>
       {showSchedule && <form className="schedule-panel" onSubmit={saveSchedule}><div><strong>Next follow-up</strong><span>Change the reminder without adding a discussion.</span></div><label>DATE & TIME<input ref={scheduleRef} type="datetime-local" required value={scheduleAt} onChange={(event) => setScheduleAt(event.target.value)} /></label><div className="schedule-actions">{lead.followUpAt && <button type="button" className="button button-ghost" disabled={scheduleSaving} onClick={clearSchedule}>Clear</button>}<button type="submit" className="button button-primary" disabled={scheduleSaving || !scheduleAt}>{scheduleSaving ? "Saving…" : "Save reminder"}</button></div></form>}
-      <div className="timeline-area"><div className="section-title"><MessageSquareText size={17} /><h3>Discussion history</h3><span className="count-pill">{lead.discussions.length}</span></div>
+      <div className="timeline-area" ref={timelineRef}><section className="conversation-memory" aria-label="Conversation memory"><div><span className="eyebrow">CONVERSATION MEMORY</span><span className="memory-source">From recorded notes</span></div>{lead.discussions.length ? <><p className="memory-quote">“{lead.discussions[0].note}”</p><div className="memory-footer"><span>Last discussed {relativeTime(lead.discussions[0].createdAt)}</span><button type="button" onClick={() => timelineRef.current?.querySelector('.timeline-item')?.scrollIntoView({ behavior: 'smooth', block: 'center' })}>View original note <ArrowUpRight size={13} /></button></div></> : <p className="memory-empty">No discussion recorded yet. Add the first note below to build this lead’s history.</p>}</section><div className="section-title"><MessageSquareText size={17} /><h3>Discussion history</h3><span className="count-pill">{lead.discussions.length}</span></div>
         {lead.discussions.length ? <div className="timeline">{lead.discussions.map((discussion) => <div className="timeline-item" key={discussion.id}><div className="timeline-marker" /><div className="timeline-content"><span className="timeline-date">{formatDate(discussion.createdAt)} <span>· {relativeTime(discussion.createdAt)}</span></span><p>{discussion.note}</p>{discussion.followUpAt && <span className="timeline-follow"><CalendarClock size={14} /> Follow-up set for {formatDate(discussion.followUpAt)}</span>}</div></div>)}</div> : <div className="empty-timeline"><MessageSquareText size={24} /><strong>No conversations yet</strong><span>Record the first interaction below.</span></div>}
       </div>
-      <form className="discussion-form" onSubmit={saveNote}><label htmlFor="note">ADD A DISCUSSION</label><textarea id="note" ref={noteRef} placeholder="What did you discuss? Add context for your next conversation…" required maxLength={5000} rows={3} value={note} onChange={(event) => setNote(event.target.value)} /><div className="discussion-bottom"><div className="composer-schedule"><span><CalendarClock size={15} /> Optional follow-up</span><label>Date<input aria-label="Follow-up date" type="date" value={noteDate} required={!!noteTime} onChange={(event) => setNoteDate(event.target.value)} /></label><label>Time<input aria-label="Follow-up time" type="time" value={noteTime} required={!!noteDate} onChange={(event) => setNoteTime(event.target.value)} /></label></div><button className="button button-primary" type="submit" disabled={saving}>{saving ? "Saving…" : "Save discussion"}<ArrowUpRight size={16} /></button></div>{error && <p className="form-error" role="alert">{error}</p>}</form>
+      <form className="discussion-form" onSubmit={saveNote}><label htmlFor="note">ADD A DISCUSSION</label><div className="note-prompts" aria-label="Quick note starters">{["No answer", "Interested", "Needs more information", "Meeting scheduled", "Proposal discussed"].map((prompt) => <button key={prompt} type="button" onClick={() => { setNote((current) => current ? `${prompt} — ${current}` : `${prompt} — `); noteRef.current?.focus(); }}>{prompt}</button>)}</div><textarea id="note" ref={noteRef} placeholder="What did you discuss? Add context for your next conversation…" required maxLength={5000} rows={3} value={note} onChange={(event) => setNote(event.target.value)} /><div className="discussion-bottom"><div className="composer-schedule"><span><CalendarClock size={15} /> Optional follow-up</span><label>Date<input aria-label="Follow-up date" type="date" value={noteDate} required={!!noteTime} onChange={(event) => setNoteDate(event.target.value)} /></label><label>Time<input aria-label="Follow-up time" type="time" value={noteTime} required={!!noteDate} onChange={(event) => setNoteTime(event.target.value)} /></label></div><button className="button button-primary" type="submit" disabled={saving}>{saving ? "Saving…" : "Save discussion"}<ArrowUpRight size={16} /></button></div>{error && <p className="form-error" role="alert">{error}</p>}</form>
     </>}
     {!lead && error && <p className="form-error dialog-load-error" role="alert">{error}</p>}
-    </div></div>
-  </ModalShell>;
+    </div></div>;
+  return inline ? <div className="inline-detail" aria-label="Selected lead details">{content}</div> : <ModalShell title="Lead discussion timeline" onClose={onClose} wide>{content}</ModalShell>;
 }
 
 export default function LeadFlow({ showLogout = false }: { showLogout?: boolean }) {
@@ -217,8 +217,11 @@ export default function LeadFlow({ showLogout = false }: { showLogout?: boolean 
   const [sort, setSort] = useState<LeadSort>("follow-up");
   const [search, setSearch] = useState("");
   const searchRef = useRef<HTMLInputElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
   const [showAdd, setShowAdd] = useState(false);
   const [selected, setSelected] = useState<{ id: number; action: LeadAction } | null>(null);
+  const [splitView, setSplitView] = useState(true);
+  const [canSplit, setCanSplit] = useState(false);
   const [dateLabel, setDateLabel] = useState("");
   const [now, setNow] = useState(() => new Date());
   const [notice, setNotice] = useState("");
@@ -232,6 +235,7 @@ export default function LeadFlow({ showLogout = false }: { showLogout?: boolean 
   useEffect(() => { refresh(); }, [refresh]);
   useEffect(() => { setDateLabel(new Date().toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" })); }, []);
   useEffect(() => { const timer = window.setInterval(() => setNow(new Date()), 60_000); return () => window.clearInterval(timer); }, []);
+  useEffect(() => { const media = window.matchMedia("(min-width: 1050px)"); const update = () => setCanSplit(media.matches); update(); media.addEventListener("change", update); return () => media.removeEventListener("change", update); }, []);
   useEffect(() => {
     function shortcuts(event: KeyboardEvent) {
       if (event.metaKey || event.ctrlKey || event.altKey || selected !== null || showAdd) return;
@@ -263,6 +267,18 @@ export default function LeadFlow({ showLogout = false }: { showLogout?: boolean 
   function clearFilters() { setFilter("All"); setQueueFilter("all"); setSearch(""); setSort("follow-up"); }
   function chooseQueue(next: QueueFilter) { setQueueFilter(next); }
   function openLead(id: number, action: LeadAction) { setSelected({ id, action }); }
+  function moveThroughList(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (event.key !== "j" && event.key !== "k" && event.key !== "J" && event.key !== "K") return;
+    const target = event.target as HTMLElement;
+    if (["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName) || target.isContentEditable) return;
+    const rows = Array.from(listRef.current?.querySelectorAll<HTMLButtonElement>(".lead-card-open") || []);
+    if (!rows.length) return;
+    event.preventDefault();
+    const current = rows.findIndex((row) => row === document.activeElement);
+    const next = event.key.toLowerCase() === "j" ? Math.min(current + 1, rows.length - 1) : Math.max(current < 0 ? rows.length - 1 : current - 1, 0);
+    rows[next].focus();
+  }
+  const useSplit = canSplit && splitView;
   return <div className="app-shell">
     <header className="topbar"><div className="topbar-inner"><a className="brand" href="/"><span className="brand-mark"><TrendingUp size={21} strokeWidth={2.7} /></span><span>Lead<span>Flow</span></span></a><span className="topbar-label">Your workspace</span>{showLogout && <button className="signout" onClick={async () => { await fetch("/api/auth", { method: "DELETE" }); window.location.href = "/login"; }}>Sign out</button>}<button className="button button-primary top-add" onClick={() => setShowAdd(true)}><Plus size={17} /> Add new lead</button></div></header>
     <main className="main-content">
@@ -271,17 +287,17 @@ export default function LeadFlow({ showLogout = false }: { showLogout?: boolean 
       <section className="next-action" aria-label="Next best action"><div className="next-action-label"><span className="eyebrow">NEXT BEST ACTION</span><span>Based on follow-up dates and activity</span></div>{loading ? <p className="next-action-empty">Finding your next follow-up…</p> : recommendation ? <div className="next-action-body"><LeadAvatar name={recommendation.lead.name} large /><div className="next-action-copy"><div className="next-action-identity"><strong>{recommendation.lead.name}</strong>{recommendation.lead.company && <span>{recommendation.lead.company}</span>}<StatusBadge status={recommendation.lead.status} /></div><p>{recommendation.lead.lastNote || "No conversation recorded yet."}</p><div className="next-action-context"><span><CalendarClock size={14} />{recommendation.lead.followUpAt && validTime(recommendation.lead.followUpAt) !== null ? formatDate(recommendation.lead.followUpAt) : "No follow-up scheduled"}</span><span>{recommendation.group === "overdue" ? "Oldest missed follow-up in your active pipeline." : recommendation.group === "today" ? "Next follow-up due today." : recommendation.group === "upcoming" ? "Earliest upcoming follow-up." : "No follow-up is scheduled; review this relationship."}</span></div></div><div className="next-action-buttons"><button type="button" className="button button-primary" onClick={() => openLead(recommendation.lead.id, "view")}>Open lead <ArrowUpRight size={15} /></button><button type="button" className="button button-ghost" onClick={() => openLead(recommendation.lead.id, "reschedule")}>Reschedule</button></div></div> : <p className="next-action-empty">No active leads need attention. New leads will appear here.</p>}</section>
       <section className="leads-panel"><div className="panel-top"><div><span className="eyebrow">YOUR WORKLIST</span><h2>Leads <span className="heading-count">{visible.length}</span></h2><p className="panel-intro">Missed follow-ups first, then today’s conversations and what is coming next.</p></div><div className="panel-actions"><label className="search-box"><Search size={18} /><input ref={searchRef} placeholder="Search name, company or phone" aria-label="Search leads" value={search} onChange={(event) => setSearch(event.target.value)} />{search && <button type="button" aria-label="Clear search" onClick={() => setSearch("")}><X size={15} /></button>}</label><button className="button button-primary mobile-add" onClick={() => setShowAdd(true)}><Plus size={17} /> Add lead</button></div></div>
         <div className="filters" aria-label="Filter leads by status">{(["All", ...statuses] as Filter[]).map((item) => <button key={item} type="button" aria-pressed={filter === item} className={`filter ${filter === item ? "filter-active" : ""}`} onClick={() => setFilter(item)}>{item}</button>)}</div>
-        <div className="worklist-controls"><label>Priority <span className="select-wrap"><select aria-label="Filter by follow-up priority" value={queueFilter} onChange={(event) => setQueueFilter(event.target.value as QueueFilter)}><option value="all">All priorities</option><option value="overdue">Overdue</option><option value="today">Due today</option><option value="upcoming">Upcoming</option><option value="unscheduled">No follow-up</option><option value="active">Active leads</option></select><ChevronDown size={14} /></span></label><label>Sort <span className="select-wrap"><select aria-label="Sort leads" value={sort} onChange={(event) => setSort(event.target.value as LeadSort)}><option value="follow-up">Next follow-up</option><option value="discussion">Latest discussion</option><option value="added">Recently added</option></select><ChevronDown size={14} /></span></label>{hasFilters && <button type="button" className="clear-filters" onClick={clearFilters}>Clear filters</button>}</div>
+        <div className="worklist-controls"><label>Priority <span className="select-wrap"><select aria-label="Filter by follow-up priority" value={queueFilter} onChange={(event) => setQueueFilter(event.target.value as QueueFilter)}><option value="all">All priorities</option><option value="overdue">Overdue</option><option value="today">Due today</option><option value="upcoming">Upcoming</option><option value="unscheduled">No follow-up</option><option value="active">Active leads</option></select><ChevronDown size={14} /></span></label><label>Sort <span className="select-wrap"><select aria-label="Sort leads" value={sort} onChange={(event) => setSort(event.target.value as LeadSort)}><option value="follow-up">Next follow-up</option><option value="discussion">Latest discussion</option><option value="added">Recently added</option></select><ChevronDown size={14} /></span></label>{hasFilters && <button type="button" className="clear-filters" onClick={clearFilters}>Clear filters</button>}<button type="button" className="view-toggle" aria-pressed={splitView} onClick={() => setSplitView((value) => !value)}>{splitView ? "Split view on" : "Split view off"}</button><span className="keyboard-hint">J / K to move · Enter to open</span></div>
         {notice && <div className="notice" role="status"><Check size={15} />{notice}<button type="button" aria-label="Dismiss message" onClick={() => setNotice("")}><X size={14} /></button></div>}
         {loadError && <div className="load-error" role="alert">{loadError} <button onClick={refresh}>Retry</button></div>}
-        {loading ? <div className="loading-list"><div /><div /><div /></div> : <div className="lead-sections">
-          {groups.filter((group) => group.leads.length > 0).map((group) => <section className="lead-group" key={group.key}><div className={`group-label group-${group.key}`}><span>{group.key === "overdue" ? <Clock3 size={15} /> : group.key === "today" ? <Bell size={15} /> : group.key === "upcoming" ? <CalendarClock size={15} /> : <UserRound size={15} />}{group.label}</span><span className="group-count">{group.leads.length}</span></div><div className="cards">{group.leads.map((lead) => <LeadCard key={lead.id} lead={lead} group={group.key} onOpen={(action) => openLead(lead.id, action)} />)}</div></section>)}
+        <div className={useSplit ? "workspace-grid workspace-grid-split" : "workspace-grid"}><div className="worklist-column">{loading ? <div className="loading-list"><div /><div /><div /></div> : <div className="lead-sections" ref={listRef} onKeyDown={moveThroughList}>
+          {groups.filter((group) => group.leads.length > 0).map((group) => <section className="lead-group" key={group.key}><div className={`group-label group-${group.key}`}><span>{group.key === "overdue" ? <Clock3 size={15} /> : group.key === "today" ? <Bell size={15} /> : group.key === "upcoming" ? <CalendarClock size={15} /> : <UserRound size={15} />}{group.label}</span><span className="group-count">{group.leads.length}</span></div><div className="cards">{group.leads.map((lead) => <LeadCard key={lead.id} lead={lead} group={group.key} selected={useSplit && selected?.id === lead.id} onOpen={(action) => openLead(lead.id, action)} />)}</div></section>)}
           {visible.length === 0 && <div className="empty-list"><span className="empty-icon"><Search size={25} /></span><h3>{leads.length ? "No leads match these filters" : "Your pipeline starts here"}</h3><p>{leads.length ? "Try a different search or clear the filters." : "Add your first lead and keep the conversation moving."}</p>{leads.length ? <button className="button button-ghost" onClick={clearFilters}>Clear filters</button> : <button className="button button-primary" onClick={() => setShowAdd(true)}><Plus size={16} /> Add a lead</button>}</div>}
-        </div>}
+        </div>}</div>{useSplit && <div className="detail-column">{selected ? <LeadDialog key={`${selected.id}-${selected.action}`} leadId={selected.id} initialAction={selected.action} onClose={closeSelected} onChanged={changed} onNotice={setNotice} inline /> : <div className="split-empty"><MessageSquareText size={22} /><strong>Pick a conversation</strong><p>Select a lead to see its latest note, full history, and next follow-up here.</p><span>The worklist stays in place while you move between leads.</span></div>}</div>}</div>
       </section>
       <footer className="footer"><span className="brand-footer"><TrendingUp size={16} /> LeadFlow</span><span>Built to keep the next conversation moving.</span><span>Made for PravarAI <Check size={14} /></span></footer>
     </main>
     {showAdd && <AddLeadDialog onClose={closeAdd} onCreated={(lead) => { changed(lead); setNotice(`${lead.name} added to the pipeline.`); closeAdd(); }} />}
-    {selected !== null && <LeadDialog leadId={selected.id} initialAction={selected.action} onClose={closeSelected} onChanged={changed} onNotice={setNotice} />}
+    {selected !== null && !useSplit && <LeadDialog key={`${selected.id}-${selected.action}`} leadId={selected.id} initialAction={selected.action} onClose={closeSelected} onChanged={changed} onNotice={setNotice} />}
   </div>;
 }
