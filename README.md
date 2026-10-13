@@ -5,7 +5,7 @@ A single-screen lead management tool for the PravarAI fullstack assessment. A sa
 ## What it does
 
 - Lead cards show name, company, status, last note, time since the last discussion, and any follow-up.
-- The worklist groups active leads as Overdue, Due Today, Upcoming, and No Follow-up Scheduled, with closed leads below them. Missed and upcoming reminders are ordered by due time.
+- The worklist pins today's follow-ups first, followed by Overdue, Upcoming, and No Follow-up Scheduled; closed leads remain below active work. Missed and upcoming reminders are ordered by due time.
 - A compact Next Best Action panel selects the oldest missed follow-up, then today's earliest reminder, then the next upcoming reminder, then an active lead without a scheduled follow-up. This is deterministic logic based on stored records, not an AI-generated recommendation.
 - Search by name, company, or phone; filter by all six statuses and follow-up priority; and sort within groups by next follow-up, latest discussion, or recently added.
 - On desktop, split view keeps the worklist beside the selected lead. Turn it off for a wider list; smaller screens use the lead dialog.
