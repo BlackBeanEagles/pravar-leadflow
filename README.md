@@ -82,4 +82,4 @@ The `public/screenshots` directory contains captures of the working list, add le
 
 ## AI assistance
 
-AI was used to help draft the implementation and documentation. The requirements were interpreted from the supplied brief, and the app was built, reviewed, and tested through its production build and working browser/API flows. The sample data is fictional.
+AI was used to help draft the implementation and documentation and to create the financial-planning desk background image. The requirements were interpreted from the supplied brief, and the app was built, reviewed, and tested through its production build and working browser/API flows. The sample data is fictional.
