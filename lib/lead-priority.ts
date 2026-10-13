@@ -13,9 +13,9 @@ export function leadPriorityGroup(lead: Lead, now = new Date()): PriorityGroup {
   if (lead.status === "Won" || lead.status === "Lost") return "closed";
   const time = validTime(lead.followUpAt);
   if (time === null) return "unscheduled";
-  if (time < now.getTime()) return "overdue";
   const due = new Date(time);
   if (due.getFullYear() === now.getFullYear() && due.getMonth() === now.getMonth() && due.getDate() === now.getDate()) return "today";
+  if (time < now.getTime()) return "overdue";
   return "upcoming";
 }
 

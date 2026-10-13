@@ -81,7 +81,7 @@ The `public/screenshots` directory contains captures of the working list, add le
 ## Design decisions
 
 - Follow-up dates are stored as ISO timestamps and classified in the user's local time zone.
-- The worklist now places a follow-up whose time has passed under Overdue, including one missed earlier today. Won and Lost are kept out of the active priority queue but remain visible under Closed.
+- Today's section includes every follow-up scheduled for the local calendar day. A time missed earlier today stays pinned there and is highlighted red; older missed reminders appear under Overdue. Won and Lost remain under Closed.
 - Adding a note without a follow-up retains the existing scheduled follow-up. Adding one with a date replaces it.
 - The current data model has discussion notes and follow-up dates but no interaction-type field. Quick note starters are saved as plain text, and Conversation Memory only quotes actual notes.
 - The workspace photograph and fictional contact portraits are served as WebP assets to keep the page light.

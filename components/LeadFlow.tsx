@@ -81,8 +81,8 @@ function LeadCard({ lead, group, selected, onOpen }: { lead: Lead; group: Priori
   const moreRef = useRef<HTMLDetailsElement>(null);
   function quickAction(action: LeadAction) { if (moreRef.current) moreRef.current.open = false; onOpen(action); }
   const dueToday = group === "today";
-  const overdue = group === "overdue";
   const followUp = validTime(lead.followUpAt) !== null ? lead.followUpAt : null;
+  const overdue = followUp !== null && isOverdue(followUp);
   return <div className={`lead-card ${dueToday ? "lead-card-today" : ""} ${overdue ? "lead-card-overdue" : ""} ${selected ? "lead-card-selected" : ""}`}>
     <button className="lead-card-open" onClick={() => onOpen("view")} type="button" aria-label={`Open ${lead.name}'s timeline`}>
     <LeadAvatar name={lead.name} />
@@ -251,7 +251,8 @@ export default function LeadFlow({ showLogout = false }: { showLogout?: boolean 
   const visible = useMemo(() => leads.filter((lead) => {
     const group = leadPriorityGroup(lead, now);
     const matchesText = [lead.name, lead.company, lead.phone].some((value) => value?.toLowerCase().includes(search.trim().toLowerCase()));
-    return matchesText && (filter === "All" || lead.status === filter) && (queueFilter === "all" || (queueFilter === "active" ? group !== "closed" : group === queueFilter));
+    const overdue = group !== "closed" && validTime(lead.followUpAt) !== null && isOverdue(lead.followUpAt!, now);
+    return matchesText && (filter === "All" || lead.status === filter) && (queueFilter === "all" || (queueFilter === "active" ? group !== "closed" : queueFilter === "overdue" ? overdue : group === queueFilter));
   }), [leads, filter, search, queueFilter, now]);
   const groupOrder: { key: PriorityGroup; label: string }[] = [
     { key: "today", label: "TODAY'S FOLLOW-UPS" }, { key: "overdue", label: "OVERDUE" },
@@ -261,7 +262,7 @@ export default function LeadFlow({ showLogout = false }: { showLogout?: boolean 
   const groups = groupOrder.map((group) => ({ ...group, leads: sortLeadGroup(visible.filter((lead) => leadPriorityGroup(lead, now) === group.key), group.key, sort) }));
   const activeCount = leads.filter((lead) => leadPriorityGroup(lead, now) !== "closed").length;
   const todayCount = leads.filter((lead) => leadPriorityGroup(lead, now) === "today").length;
-  const overdueCount = leads.filter((lead) => leadPriorityGroup(lead, now) === "overdue").length;
+  const overdueCount = leads.filter((lead) => leadPriorityGroup(lead, now) !== "closed" && validTime(lead.followUpAt) !== null && isOverdue(lead.followUpAt!, now)).length;
   const recommendation = nextLeadToContact(leads, now);
   const hasFilters = filter !== "All" || queueFilter !== "all" || search.trim() !== "" || sort !== "follow-up";
   function clearFilters() { setFilter("All"); setQueueFilter("all"); setSearch(""); setSort("follow-up"); }

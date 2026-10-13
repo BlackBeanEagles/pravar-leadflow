@@ -20,7 +20,8 @@ test("priority separates missed reminders from later today and excludes closed l
     lead(7, "Lost", null),
     lead(8, "New", "invalid"),
   ];
-  assert.deepEqual(records.map((record) => leadPriorityGroup(record, now)), ["overdue", "overdue", "today", "upcoming", "unscheduled", "closed", "closed", "unscheduled"]);
+  assert.deepEqual(records.map((record) => leadPriorityGroup(record, now)), ["overdue", "today", "today", "upcoming", "unscheduled", "closed", "closed", "unscheduled"]);
+  assert.deepEqual(sortLeadGroup(records.slice(1, 3), "today").map((record) => record.id), [2, 3]);
   assert.equal(nextLeadToContact(records, now)?.lead.id, 1);
 });
 
