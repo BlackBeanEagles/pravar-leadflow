@@ -62,7 +62,7 @@ npm run build
 npm test
 ```
 
-The `public/screenshots` directory contains captures of the working list, add lead dialog, and discussion timeline.
+The `public/screenshots` directory contains captures of the working list, add lead dialog, and discussion timeline. These captures show the first visual version; the current build has a warmer, more compact follow-up workspace.
 
 ## Screenshots
 
