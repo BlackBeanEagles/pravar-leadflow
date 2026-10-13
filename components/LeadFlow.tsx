@@ -13,9 +13,7 @@ function sameLocalDay(date: string, today = new Date()) {
 }
 
 function isOverdue(date: string, today = new Date()) {
-  const value = new Date(date);
-  const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  return value < startOfToday;
+  return new Date(date).getTime() < today.getTime();
 }
 
 function relativeTime(date: string) {
@@ -166,7 +164,7 @@ export default function LeadFlow({ showLogout = false }: { showLogout?: boolean 
   function changed(lead: LeadDetail) { setLeads((previous) => { const rest = previous.filter((item) => item.id !== lead.id); return [lead, ...rest]; }); }
   const visible = useMemo(() => leads.filter((lead) => (filter === "All" || lead.status === filter) && lead.name.toLowerCase().includes(search.trim().toLowerCase())), [leads, filter, search]);
   const today = visible.filter((lead) => lead.followUpAt && sameLocalDay(lead.followUpAt));
-  const overdue = visible.filter((lead) => lead.followUpAt && isOverdue(lead.followUpAt));
+  const overdue = visible.filter((lead) => lead.followUpAt && !sameLocalDay(lead.followUpAt) && isOverdue(lead.followUpAt));
   const rest = visible.filter((lead) => !lead.followUpAt || (!sameLocalDay(lead.followUpAt) && !isOverdue(lead.followUpAt)));
   const open = leads.filter((lead) => lead.status !== "Won" && lead.status !== "Lost").length;
   return <div className="app-shell">

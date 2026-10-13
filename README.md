@@ -76,7 +76,7 @@ The `public/screenshots` directory contains captures of the working list, add le
 
 ## Design decisions
 
-- Follow-up dates are stored as ISO timestamps and classified as today/overdue in the user's local time zone.
+- Follow-up dates are stored as ISO timestamps and classified in the user's local time zone. A follow-up earlier today stays pinned under Today and is marked overdue.
 - Adding a note without a follow-up retains the existing scheduled follow-up. Adding one with a date replaces it.
 - Login is optional to enable locally. It is a single shared workspace with one configured credential; add real user accounts and account scoping before deploying for customers.
 
