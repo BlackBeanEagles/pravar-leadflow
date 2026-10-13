@@ -55,3 +55,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .welcome{min-height:220px;margin:23px 0 20px;padding:32px 42px;border:1px solid #e6e5d9;border-radius:14px;background-image:linear-gradient(90deg,rgba(249,248,242,.96) 0%,rgba(249,248,242,.94) 34%,rgba(249,248,242,.42) 62%,rgba(249,248,242,.02) 100%),url('/images/financial-planning-desk.png');background-size:cover;background-position:center center}
 .welcome h1{max-width:590px;line-height:1.18}.welcome p{color:#566e5e}
 @media(max-width:650px){.welcome{min-height:190px;margin:16px 0;padding:23px 21px;background-image:linear-gradient(90deg,rgba(249,248,242,.97) 0%,rgba(249,248,242,.90) 52%,rgba(249,248,242,.40) 100%),url('/images/financial-planning-desk.png');background-position:63% center}.welcome h1{max-width:360px}.welcome p{max-width:270px}}
+
+/* Seed-contact photos add human context; new contacts still use their initials. */
+.lead-card .avatar.avatar-photo,.detail-aside .avatar.avatar-photo{background-image:url('/images/demo-contact-portraits.png');background-size:300% 300%;background-repeat:no-repeat;border:1px solid #e6e9e2;box-shadow:0 1px 3px #20352712}

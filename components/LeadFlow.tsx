@@ -38,6 +38,25 @@ function initials(name: string) {
   return name.split(/\s+/).slice(0, 2).map((part) => part[0]?.toUpperCase()).join("");
 }
 
+// Portraits belong to the fictional seed records only. New leads retain initials.
+const demoPortraits: Record<string, number> = {
+  "Sarah Connor": 0,
+  "Maya Patel": 8,
+  "Daniel Kim": 3,
+  "Priya Shah": 2,
+  "Oliver Bennett": 6,
+  "Ava Brooks": 4,
+  "Noah Williams": 7,
+};
+
+function LeadAvatar({ name, large = false }: { name: string; large?: boolean }) {
+  const portrait = demoPortraits[name];
+  const position = ["0%", "50%", "100%"];
+  return <span className={`avatar ${large ? "avatar-large" : ""} ${portrait === undefined ? "" : "avatar-photo"}`} aria-hidden="true" style={portrait === undefined ? undefined : { backgroundPosition: `${position[portrait % 3]} ${position[Math.floor(portrait / 3)]}` }}>
+    {portrait === undefined ? initials(name) : null}
+  </span>;
+}
+
 async function requestJson<T>(url: string, options?: RequestInit): Promise<T> {
   let response: Response;
   try { response = await fetch(url, { ...options, headers: { "Content-Type": "application/json", ...options?.headers } }); }
@@ -55,7 +74,7 @@ function LeadCard({ lead, onClick }: { lead: Lead; onClick: () => void }) {
   const dueToday = !!lead.followUpAt && sameLocalDay(lead.followUpAt);
   const overdue = !!lead.followUpAt && isOverdue(lead.followUpAt);
   return <button className={`lead-card ${dueToday ? "lead-card-today" : ""} ${overdue ? "lead-card-overdue" : ""}`} onClick={onClick} type="button">
-    <span className="avatar">{initials(lead.name)}</span>
+    <LeadAvatar name={lead.name} />
     <span className="lead-main">
       <span className="lead-heading"><strong>{lead.name}</strong>{lead.company && <span className="company">{lead.company}</span>}</span>
       <span className="lead-note">{lead.lastNote || "No discussions yet. Open to add the first note."}</span>
@@ -132,7 +151,7 @@ function LeadDialog({ leadId, onClose, onChanged }: { leadId: number; onClose: (
     finally { setSaving(false); }
   }
   return <ModalShell title="Lead discussion timeline" onClose={onClose} wide>
-    <div className="detail-layout"><aside className="detail-aside"><div className="detail-aside-top"><span className="eyebrow">LEAD PROFILE</span><button className="icon-button detail-close" aria-label="Close" onClick={onClose}><X size={19} /></button></div><span className="avatar avatar-large">{lead ? initials(lead.name) : "…"}</span><h2>{lead?.name || (loading ? "Loading…" : "Lead unavailable")}</h2><p className="detail-company">{lead?.company || "No company added"}</p>
+    <div className="detail-layout"><aside className="detail-aside"><div className="detail-aside-top"><span className="eyebrow">LEAD PROFILE</span><button className="icon-button detail-close" aria-label="Close" onClick={onClose}><X size={19} /></button></div><LeadAvatar name={lead?.name || "…"} large /><h2>{lead?.name || (loading ? "Loading…" : "Lead unavailable")}</h2><p className="detail-company">{lead?.company || "No company added"}</p>
       {lead && <><div className="detail-field"><span className="field-caption">PHONE</span>{lead.phone ? <a href={`tel:${lead.phone}`}><Phone size={15} />{lead.phone}</a> : <span>Not added</span>}</div><div className="detail-field"><span className="field-caption">CURRENT STATUS</span><select aria-label="Lead status" value={lead.status} onChange={(event) => changeStatus(event.target.value as LeadStatus)}>{statuses.map((status) => <option key={status}>{status}</option>)}</select></div><div className="detail-field next-follow"><span className="field-caption">NEXT FOLLOW-UP</span><strong className={lead.followUpAt && isOverdue(lead.followUpAt) ? "due-red" : ""}>{lead.followUpAt ? formatDate(lead.followUpAt) : "Not scheduled"}</strong></div></>}
       <p className="aside-caption">Keep the context. Move the conversation forward.</p></aside>
     <div className="detail-main">{lead && <>
