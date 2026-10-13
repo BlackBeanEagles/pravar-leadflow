@@ -5,13 +5,14 @@ A single-screen lead management tool for the PravarAI fullstack assessment. A sa
 ## What it does
 
 - Lead cards show name, company, status, last note, time since the last discussion, and any follow-up.
-- Today's follow-ups appear before the rest of the pipeline. Overdue follow-ups are highlighted in red.
-- Search by name and filter by all six statuses. Click a summary card to narrow the queue to due today, overdue, all leads, or leads in progress.
+- The worklist groups active leads as Overdue, Due Today, Upcoming, and No Follow-up Scheduled, with closed leads below them. Missed and upcoming reminders are ordered by due time.
+- A compact Next Best Action panel selects the oldest missed follow-up, then today's earliest reminder, then the next upcoming reminder, then an active lead without a scheduled follow-up. This is deterministic logic based on stored records, not an AI-generated recommendation.
+- Search by name, company, or phone; filter by all six statuses and follow-up priority; and sort within groups by next follow-up, latest discussion, or recently added.
 - A lead opens a timeline dialog with discussions in newest-first order, a status selector, and a note form with an optional follow-up date and time.
-- Call a lead from the list when a phone number is available, or open the note form directly from the row.
+- Call a lead from the list when a phone number is available, or use its action menu to log a discussion, reschedule, or change status.
 - Reschedule or clear a follow-up without adding a discussion. Saving a note, reminder, or status refreshes the list immediately and persists in SQLite.
 - Add a lead with a required name and optional company and phone. New is the default status.
-- Responsive layout, keyboard-trapped and Escape-closeable dialogs, empty states, and API validation/errors.
+- Responsive layout, a full-screen lead dialog on mobile, keyboard-trapped and Escape-closeable dialogs, empty and success states, and API validation/errors.
 - Optional password login, enabled through environment variables.
 
 ## Stack
@@ -77,8 +78,10 @@ The `public/screenshots` directory contains captures of the working list, add le
 
 ## Design decisions
 
-- Follow-up dates are stored as ISO timestamps and classified in the user's local time zone. A follow-up earlier today stays pinned under Today and is marked overdue.
+- Follow-up dates are stored as ISO timestamps and classified in the user's local time zone.
+- The worklist now places a follow-up whose time has passed under Overdue, including one missed earlier today. Won and Lost are kept out of the active priority queue but remain visible under Closed.
 - Adding a note without a follow-up retains the existing scheduled follow-up. Adding one with a date replaces it.
+- The current data model has discussion notes and follow-up dates but no interaction-type field, so the dialog does not invent call, email, or meeting labels.
 - The workspace photograph and fictional contact portraits are served as WebP assets to keep the page light.
 - Login is optional to enable locally. It is a single shared workspace with one configured credential; add real user accounts and account scoping before deploying for customers.
 
