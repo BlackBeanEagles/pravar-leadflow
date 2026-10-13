@@ -166,14 +166,14 @@
 .workspace-grid { min-width: 0; }
 .workspace-grid-split { display: grid; grid-template-columns: minmax(0, .93fr) minmax(0, 1.07fr); gap: 15px; align-items: start; }
 .worklist-column, .detail-column { min-width: 0; }
-.detail-column { position: sticky; top: 78px; min-height: 690px; border: 1px solid #dfe7db; border-radius: 9px; overflow: hidden; background: #fff; }
+.detail-column { position: sticky; top: 78px; height: calc(100dvh - 95px); max-height: 760px; min-height: 300px; border: 1px solid #dfe7db; border-radius: 9px; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; background: #fff; }
 .split-empty { min-height: 690px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 35px; color: #637b68; background: #f7faf6; }
 .split-empty svg { margin-bottom: 13px; color: #568467; }
 .split-empty strong { color: #284b35; font: 800 16px Manrope, Arial, sans-serif; }
 .split-empty p { max-width: 270px; margin: 8px 0 14px; font-size: 12px; line-height: 1.6; }
 .split-empty span { max-width: 250px; font-size: 10px; }
 .lead-card-selected, .lead-card-selected:hover { background: #edf5ed; box-shadow: inset 3px 0 0 #477b56; }
-.inline-detail .detail-layout { display: flex; flex-direction: column; height: 690px; min-height: 0; max-height: none; }
+.inline-detail .detail-layout { display: block; height: auto; min-height: 100%; max-height: none; }
 .inline-detail .detail-aside { display: grid; flex: none; grid-template-columns: 55px repeat(3, minmax(0, 1fr)); gap: 3px 11px; padding: 15px 17px 13px; border-right: 0; border-bottom: 1px solid #dfe9db; }
 .inline-detail .detail-aside-top { grid-column: 1 / -1; margin: 0 0 5px; }
 .inline-detail .detail-aside .avatar-large { grid-column: 1; grid-row: 2 / 4; width: 48px; height: 48px; }
@@ -187,8 +187,8 @@
 .inline-detail .detail-field a, .inline-detail .detail-field strong { overflow-wrap: anywhere; font-size: 11px; }
 .inline-detail .detail-field select { height: 32px; }
 .inline-detail .aside-caption { display: none; }
-.inline-detail .detail-main { flex: 1; }
-.inline-detail .timeline-area { padding: 17px 19px; }
+.inline-detail .detail-main { display: block; }
+.inline-detail .timeline-area { padding: 17px 19px; max-height: none; overflow: visible; }
 .inline-detail .discussion-form { padding: 13px 19px 16px; }
 .inline-detail .discussion-form textarea { min-height: 58px; }
 .inline-detail .discussion-bottom { flex-wrap: wrap; }
