@@ -6,11 +6,12 @@ A single-screen lead management tool for the PravarAI fullstack assessment. A sa
 
 - Lead cards show name, company, status, last note, time since the last discussion, and any follow-up.
 - Today's follow-ups appear before the rest of the pipeline. Overdue follow-ups are highlighted in red.
-- Search by name and filter by all six statuses.
+- Search by name and filter by all six statuses. Click a summary card to narrow the queue to due today, overdue, all leads, or leads in progress.
 - A lead opens a timeline dialog with discussions in newest-first order, a status selector, and a note form with an optional follow-up date and time.
-- Saving a note or changing status refreshes the list immediately and persists in SQLite.
+- Call a lead from the list when a phone number is available, or open the note form directly from the row.
+- Reschedule or clear a follow-up without adding a discussion. Saving a note, reminder, or status refreshes the list immediately and persists in SQLite.
 - Add a lead with a required name and optional company and phone. New is the default status.
-- Responsive layout, keyboard-closeable dialogs, empty states, and API validation/errors.
+- Responsive layout, keyboard-trapped and Escape-closeable dialogs, empty states, and API validation/errors.
 - Optional password login, enabled through environment variables.
 
 ## Stack
@@ -48,7 +49,7 @@ With Docker installed, run `docker compose up --build` and open [http://localhos
 | GET | `/api/leads` | List leads with latest discussion summary |
 | POST | `/api/leads` | Create a lead; requires `name` |
 | GET | `/api/leads/:id` | Lead details and newest-first discussions |
-| PATCH | `/api/leads/:id` | Update `{ "status": "Qualified" }` |
+| PATCH | `/api/leads/:id` | Update `{ "status": "Qualified" }` or `{ "followUpAt": "ISO date" }`; use `null` to clear a reminder |
 | POST | `/api/leads/:id/discussions` | Add `{ "note": "...", "followUpAt": "ISO date" }` |
 | POST | `/api/auth` | Sign in when optional login is configured |
 | DELETE | `/api/auth` | Sign out |
@@ -78,6 +79,7 @@ The `public/screenshots` directory contains captures of the working list, add le
 
 - Follow-up dates are stored as ISO timestamps and classified in the user's local time zone. A follow-up earlier today stays pinned under Today and is marked overdue.
 - Adding a note without a follow-up retains the existing scheduled follow-up. Adding one with a date replaces it.
+- The workspace photograph and fictional contact portraits are served as WebP assets to keep the page light.
 - Login is optional to enable locally. It is a single shared workspace with one configured credential; add real user accounts and account scoping before deploying for customers.
 
 ## AI assistance

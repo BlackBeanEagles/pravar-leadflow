@@ -75,6 +75,11 @@ export function updateStatus(id: number, status: LeadStatus): LeadDetail | null 
   return result.changes ? getLead(id) : null;
 }
 
+export function updateFollowUp(id: number, followUpAt: string | null): LeadDetail | null {
+  const result = getDb().prepare("UPDATE leads SET follow_up_at = ?, updated_at = ? WHERE id = ?").run(followUpAt, new Date().toISOString(), id);
+  return result.changes ? getLead(id) : null;
+}
+
 export function addDiscussion(id: number, note: string, followUpAt: string | null): LeadDetail | null {
   if (!getLead(id)) return null;
   const now = new Date().toISOString();
