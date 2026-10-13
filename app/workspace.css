@@ -283,3 +283,10 @@
   .lead-heading { max-width: 190px; }
   .composer-schedule > span { width: 100%; }
 }
+
+/* Dialog mode needs one scroll surface for the profile, history, and composer.
+   A fixed inner grid previously hid the form below short viewports. */
+.modal-wide { overflow-y: auto; overscroll-behavior: contain; }
+.modal-wide .detail-layout { flex: 0 0 auto; height: auto; min-height: 0; max-height: none; }
+.modal-wide .detail-main { display: block; }
+.modal-wide .timeline-area { max-height: none; overflow: visible; }
