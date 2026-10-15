@@ -10,10 +10,8 @@
 }
 
 body {
-  background-color: #e8e7df;
-  background-image:
-    linear-gradient(180deg, rgba(249, 248, 243, .38), rgba(249, 248, 243, .62)),
-    url('/images/financial-planning-desk.webp');
+  background-color: #182b23;
+  background-image: url('/images/wealth-advisor-desk.webp');
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -36,7 +34,7 @@ body {
   margin: 19px 0 14px;
   padding: 21px 31px;
   border-radius: 11px;
-  background: linear-gradient(90deg, rgba(250, 249, 245, .90), rgba(250, 249, 245, .64));
+  background: linear-gradient(90deg, rgba(250, 249, 245, .94) 0%, rgba(250, 249, 245, .82) 46%, rgba(250, 249, 245, .10) 100%);
   border-color: rgba(255, 255, 255, .8);
   box-shadow: 0 8px 26px rgba(40, 48, 34, .08);
 }
@@ -248,7 +246,7 @@ body {
 }
 
 @media (max-width: 650px) {
-  .welcome { min-height: 113px; margin: 12px 0; padding: 17px 20px; background-position: 68% center; }
+  .welcome { min-height: 113px; margin: 12px 0; padding: 17px 20px; background: linear-gradient(90deg, rgba(250, 249, 245, .97), rgba(250, 249, 245, .84) 70%, rgba(250, 249, 245, .52)); }
   .welcome h1 { font-size: 23px; }
   .welcome p { max-width: 225px; font-size: 11px; }
   .stats-grid { gap: 7px; }
