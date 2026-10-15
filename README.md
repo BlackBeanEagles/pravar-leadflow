@@ -84,7 +84,7 @@ The `public/screenshots` directory contains captures of the working list, add le
 - Today's section includes every follow-up scheduled for the local calendar day. A time missed earlier today stays pinned there and is highlighted red; older missed reminders appear under Overdue. Won and Lost remain under Closed.
 - Adding a note without a follow-up retains the existing scheduled follow-up. Adding one with a date replaces it.
 - The current data model has discussion notes and follow-up dates but no interaction-type field. Quick note starters are saved as plain text, and Conversation Memory only quotes actual notes.
-- The workspace photograph and fictional contact portraits are served as WebP assets to keep the page light.
+- The workspace photograph and portraits for the 25 fictional seed contacts are served as WebP assets to keep the page light. Leads added by a user display initials.
 - Login is optional to enable locally. It is a single shared workspace with one configured credential; add real user accounts and account scoping before deploying for customers.
 
 ## AI assistance

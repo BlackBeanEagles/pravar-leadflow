@@ -46,7 +46,7 @@ function initials(name: string) {
 }
 
 // Portraits belong to the fictional seed records only. New leads retain initials.
-const demoPortraits: Record<string, number> = {
+const originalDemoPortraits: Record<string, number> = {
   "Sarah Connor": 0,
   "Maya Patel": 8,
   "Daniel Kim": 3,
@@ -56,10 +56,33 @@ const demoPortraits: Record<string, number> = {
   "Noah Williams": 7,
 };
 
+const expandedDemoPortraits: Record<string, number> = {
+  "Rohan Mehta": 0,
+  "Grace Park": 1,
+  "Leena Thomas": 2,
+  "Arjun Desai": 3,
+  "Sofia Martinez": 4,
+  "Marcus Reed": 5,
+  "Nikhil Jain": 6,
+  "Anika Rao": 7,
+  "Kabir Sethi": 8,
+  "Hana Okafor": 9,
+  "Evelyn Price": 10,
+  "Meera Menon": 11,
+  "David Chen": 12,
+  "Farah Ali": 13,
+  "Aditi Bose": 14,
+  "James Walker": 15,
+  "Vikram Shah": 16,
+  "Clara Fischer": 17,
+};
+
 function LeadAvatar({ name, large = false }: { name: string; large?: boolean }) {
-  const portrait = demoPortraits[name];
-  const position = ["0%", "50%", "100%"];
-  return <span className={`avatar ${large ? "avatar-large" : ""} ${portrait === undefined ? "" : "avatar-photo"}`} aria-hidden="true" style={portrait === undefined ? undefined : { backgroundPosition: `${position[portrait % 3]} ${position[Math.floor(portrait / 3)]}` }}>
+  const expandedPortrait = expandedDemoPortraits[name];
+  const portrait = expandedPortrait ?? originalDemoPortraits[name];
+  const columns = expandedPortrait === undefined ? 3 : 6;
+  const backgroundPosition = portrait === undefined ? undefined : `${(portrait % columns) * 100 / (columns - 1)}% ${Math.floor(portrait / columns) * 50}%`;
+  return <span className={`avatar ${large ? "avatar-large" : ""} ${portrait === undefined ? "" : "avatar-photo"} ${expandedPortrait === undefined ? "" : "avatar-photo-expanded"}`} aria-hidden="true" style={backgroundPosition === undefined ? undefined : { backgroundPosition }}>
     {portrait === undefined ? initials(name) : null}
   </span>;
 }
