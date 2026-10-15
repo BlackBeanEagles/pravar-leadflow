@@ -225,6 +225,11 @@ body {
 .workspace-grid-split .lead-quick-actions { padding-right: 7px; }
 .workspace-grid-split .lead-quick-actions > a { font-size: 0; }
 .workspace-grid-split .lead-quick-actions > a svg { width: 16px; height: 16px; }
+@media (min-width: 1050px) {
+  .workspace-grid:not(.workspace-grid-split) .lead-main { flex: 0 1 560px; }
+  .workspace-grid:not(.workspace-grid-split) .card-end { margin-left: 18px; justify-content: flex-start; }
+  .workspace-grid:not(.workspace-grid-split) .card-end .status { margin-left: 0; }
+}
 .conversation-memory { margin: 0 0 22px; padding: 13px 14px; border: 1px solid #dfe8dc; border-left: 3px solid #669574; border-radius: 7px; background: #f7faf6; }
 .conversation-memory > div:first-child { display: flex; align-items: baseline; gap: 9px; }
 .conversation-memory .eyebrow { color: #356448; }
