@@ -99,4 +99,4 @@ The screenshots below were captured from the current workspace on October 16, 20
 
 ## AI assistance
 
-AI was used to help draft the implementation and documentation and to create the financial-planning desk background and demo contact portraits. The requirements were interpreted from the supplied brief, and the app was built, reviewed, and tested through its production build and working browser/API flows. The sample data and portraits are fictional.
+AI was used to help draft the implementation and documentation and to create the financial-planning desk background and demo contact portraits. The walkthrough uses generated male narration with captions timed to that audio. The requirements were interpreted from the supplied brief, and the app was built, reviewed, and tested through its production build and working browser/API flows. The sample data and portraits are fictional.
