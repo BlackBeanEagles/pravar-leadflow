@@ -66,15 +66,25 @@ npm run build
 npm test
 ```
 
-The `public/screenshots` directory contains captures of the working list, add lead dialog, and discussion timeline. These captures show the first visual version; the current build has a warmer, more compact follow-up workspace.
+The screenshots below were captured from the current workspace on October 16, 2026. The demo contacts are fictional; relative times and follow-up groups change with the local date.
+
+[Watch the narrated walkthrough (2 min 58 sec)](https://github.com/BlackBeanEagles/pravar-leadflow/releases/download/leadflow-demo-2026-10-16/LeadFlow-demo.mp4). The video includes on-screen labels and subtitles. A separate `.srt` file is attached to the same release.
 
 ## Screenshots
 
 ![Lead list with today's and overdue follow-ups](public/screenshots/lead-list.jpg)
 
+![A newly logged follow-up pinned to today's queue](public/screenshots/today-followups.jpg)
+
+![Overdue follow-ups highlighted in red](public/screenshots/overdue-followups.jpg)
+
 ![Add lead dialog](public/screenshots/add-lead.jpg)
 
-![Discussion timeline](public/screenshots/lead-timeline.jpg)
+![Discussion timeline after a new note and status update](public/screenshots/lead-timeline.jpg)
+
+![New lead persisted in the worklist](public/screenshots/new-lead.jpg)
+
+![Optional side-by-side view](public/screenshots/split-view.jpg)
 
 ![Optional login](public/screenshots/login.jpg)
 

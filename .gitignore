@@ -6,3 +6,4 @@ build/
 data/
 *.tsbuildinfo
 npm-debug.log*
+submission-assets/
