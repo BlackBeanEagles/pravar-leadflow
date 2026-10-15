@@ -8,7 +8,7 @@ A single-screen lead management tool for the PravarAI fullstack assessment. A sa
 - The worklist pins today's follow-ups first, followed by Overdue, Upcoming, and No Follow-up Scheduled; closed leads remain below active work. Missed and upcoming reminders are ordered by due time.
 - A compact Next Best Action panel selects the oldest missed follow-up, then today's earliest reminder, then the next upcoming reminder, then an active lead without a scheduled follow-up. This is deterministic logic based on stored records, not an AI-generated recommendation.
 - Search by name, company, or phone; filter by all six statuses and follow-up priority; and sort within groups by next follow-up, latest discussion, or recently added.
-- On desktop, split view keeps the worklist beside the selected lead. Turn it off for a wider list; smaller screens use the lead dialog.
+- Opening a lead shows its timeline in a dialog by default, as in the assessment brief. On desktop, an optional split view keeps the worklist beside the selected lead.
 - The lead detail shows a Conversation Memory excerpt taken verbatim from the latest stored note, with a link to that note. The full discussion history is newest first.
 - The note form includes optional follow-up date and time and quick note starters for common outcomes. These starters are editable note text, not separate interaction metadata.
 - Call a lead from the list when a phone number is available, or use its action menu to log a discussion, reschedule, or change status.
