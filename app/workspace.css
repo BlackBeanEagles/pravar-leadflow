@@ -9,6 +9,23 @@
   --alert: #b4533c;
 }
 
+body {
+  background-color: #e8e7df;
+  background-image:
+    linear-gradient(180deg, rgba(249, 248, 243, .38), rgba(249, 248, 243, .62)),
+    url('/images/financial-planning-desk.webp');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.login-page { background: transparent; }
+
+@media (max-width: 750px) {
+  body { background-attachment: scroll; background-position: 67% top; }
+}
+
 .topbar { height: 64px; }
 .topbar-inner, .main-content { max-width: 1240px; }
 .topbar-label { color: #687d70; }
@@ -19,8 +36,9 @@
   margin: 19px 0 14px;
   padding: 21px 31px;
   border-radius: 11px;
-  background-image: linear-gradient(90deg, #f7f6f0 0%, #f7f6f0f0 47%, #f7f6f078 76%, #f7f6f01a 100%), url('/images/financial-planning-desk.webp');
-  background-position: center 52%;
+  background: linear-gradient(90deg, rgba(250, 249, 245, .90), rgba(250, 249, 245, .64));
+  border-color: rgba(255, 255, 255, .8);
+  box-shadow: 0 8px 26px rgba(40, 48, 34, .08);
 }
 .welcome h1 { margin: 9px 0 3px; font-size: 29px; letter-spacing: -1px; }
 .welcome p { font-size: 12px; }
