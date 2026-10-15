@@ -25,7 +25,7 @@ body {
 }
 
 .topbar { height: 60px; }
-.topbar-inner, .main-content { max-width: 1240px; }
+.topbar-inner, .main-content { max-width: 1600px; }
 .topbar-label { color: #687d70; }
 .main-content { padding-bottom: 12px; }
 
@@ -140,7 +140,7 @@ body {
 .lead-main { gap: 4px; }
 .lead-heading { gap: 7px; }
 .lead-heading strong { font-size: 13px; }
-.lead-note { max-width: 470px; font-size: 11px; }
+.lead-note { max-width: 650px; font-size: 11px; }
 .lead-meta { color: #5c7060; font-size: 10px; }
 .card-end { min-width: 235px; gap: 12px; }
 .card-end .status { margin-left: auto; }

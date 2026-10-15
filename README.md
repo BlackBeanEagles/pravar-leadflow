@@ -35,7 +35,7 @@ Next.js 16 (React 19, TypeScript), Next.js Route Handlers, built-in Node.js SQLi
 
 4. Open [http://localhost:3000](http://localhost:3000).
 
-The seed script is idempotent: it adds seven example leads and discussions only when the database is empty. To reset demo data, stop the app, remove `data/leadflow.sqlite` (plus any `-wal` and `-shm` files), then run `npm run seed` again.
+The seed script adds 25 fictional leads and 39 discussions to an empty database. It also expands the original seven-lead demo database without changing those existing records. Re-running it does not create duplicates, and it skips databases that do not contain the original demo records. To reset demo data, stop the app, remove `data/leadflow.sqlite` (plus any `-wal` and `-shm` files), then run `npm run seed` again.
 
 ### Optional login
 
