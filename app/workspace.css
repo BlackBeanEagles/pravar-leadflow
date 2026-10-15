@@ -158,7 +158,7 @@ body {
 .lead-more-menu button { width: 100%; border: 0; background: transparent; padding: 9px 8px; color: #355440; text-align: left; border-radius: 5px; font-size: 11px; font-weight: 700; }
 .lead-more-menu button:hover { background: #eff5ee; }
 .lead-card:has(.lead-more[open]) { z-index: 10; }
-.group-closed .lead-card { opacity: .76; }
+.group-closed .lead-card { opacity: .9; }
 
 .modal-wide { width: min(100%, 940px); }
 .detail-layout { grid-template-columns: 230px minmax(0, 1fr); }
@@ -226,9 +226,20 @@ body {
 .workspace-grid-split .lead-quick-actions > a { font-size: 0; }
 .workspace-grid-split .lead-quick-actions > a svg { width: 16px; height: 16px; }
 @media (min-width: 1050px) {
-  .workspace-grid:not(.workspace-grid-split) .lead-main { flex: 0 1 560px; }
+  .workspace-grid:not(.workspace-grid-split) .lead-card-open { min-height: 98px; padding: 15px 17px; gap: 16px; }
+  .workspace-grid:not(.workspace-grid-split) .lead-card .avatar { width: 55px; height: 55px; border-radius: 11px; }
+  .workspace-grid:not(.workspace-grid-split) .lead-main { flex: 0 1 600px; gap: 6px; }
+  .workspace-grid:not(.workspace-grid-split) .lead-heading strong { font-size: 15px; }
+  .workspace-grid:not(.workspace-grid-split) .company { font-size: 13px; }
+  .workspace-grid:not(.workspace-grid-split) .lead-note { max-width: 600px; font-size: 13px; line-height: 1.4; }
+  .workspace-grid:not(.workspace-grid-split) .lead-meta { font-size: 11px; }
   .workspace-grid:not(.workspace-grid-split) .card-end { margin-left: 18px; justify-content: flex-start; }
   .workspace-grid:not(.workspace-grid-split) .card-end .status { margin-left: 0; }
+  .workspace-grid:not(.workspace-grid-split) .status { font-size: 10px; padding: 6px 9px; }
+  .workspace-grid:not(.workspace-grid-split) .due-block > span { font-size: 10px; }
+  .workspace-grid:not(.workspace-grid-split) .due-block strong { font-size: 12px; }
+  .workspace-grid:not(.workspace-grid-split) .lead-quick-actions > a { font-size: 12px; }
+  .workspace-grid:not(.workspace-grid-split) .group-label { font-size: 11px; }
 }
 .conversation-memory { margin: 0 0 22px; padding: 13px 14px; border: 1px solid #dfe8dc; border-left: 3px solid #669574; border-radius: 7px; background: #f7faf6; }
 .conversation-memory > div:first-child { display: flex; align-items: baseline; gap: 9px; }

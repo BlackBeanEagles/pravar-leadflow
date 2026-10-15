@@ -104,8 +104,9 @@ function LeadCard({ lead, group, selected, onOpen }: { lead: Lead; group: Priori
   const moreRef = useRef<HTMLDetailsElement>(null);
   function quickAction(action: LeadAction) { if (moreRef.current) moreRef.current.open = false; onOpen(action); }
   const dueToday = group === "today";
+  const closed = lead.status === "Won" || lead.status === "Lost";
   const followUp = validTime(lead.followUpAt) !== null ? lead.followUpAt : null;
-  const overdue = followUp !== null && isOverdue(followUp);
+  const overdue = !closed && followUp !== null && isOverdue(followUp);
   return <div className={`lead-card ${dueToday ? "lead-card-today" : ""} ${overdue ? "lead-card-overdue" : ""} ${selected ? "lead-card-selected" : ""}`}>
     <button className="lead-card-open" onClick={() => onOpen("view")} type="button" aria-label={`Open ${lead.name}'s timeline`}>
     <LeadAvatar name={lead.name} />
@@ -115,7 +116,7 @@ function LeadCard({ lead, group, selected, onOpen }: { lead: Lead; group: Priori
       <span className="lead-meta"><Clock3 size={13} />{lead.lastDiscussionAt ? `Last discussion ${relativeTime(lead.lastDiscussionAt)}` : "No discussions yet"}</span>
     </span>
     <span className="card-end"><StatusBadge status={lead.status} /><span className={`due-block ${overdue ? "due-block-overdue" : dueToday ? "due-block-today" : ""}`}>
-      {followUp ? <><span>{overdue ? "Overdue" : dueToday ? "Due today" : "Next follow-up"}</span><strong><CalendarClock size={14} />{formatDate(followUp, { hour: "numeric", minute: "2-digit", ...(dueToday ? {} : { month: "short", day: "numeric" }) })}</strong></> : <><span>No follow-up</span><strong>Not scheduled</strong></>}
+      {followUp ? <><span>{closed ? "Saved follow-up" : overdue ? "Overdue" : dueToday ? "Due today" : "Next follow-up"}</span><strong><CalendarClock size={14} />{formatDate(followUp, { hour: "numeric", minute: "2-digit", ...(dueToday ? {} : { month: "short", day: "numeric" }) })}</strong></> : <><span>No follow-up</span><strong>Not scheduled</strong></>}
     </span></span></button>
     <div className="lead-quick-actions">{lead.phone && <a href={`tel:${lead.phone}`} aria-label={`Call ${lead.name}`}><Phone size={14} /> Call</a>}<details className="lead-more" ref={moreRef}><summary aria-label={`More actions for ${lead.name}`}><MoreHorizontal size={18} /></summary><div className="lead-more-menu"><button type="button" onClick={() => quickAction("note")}>Log discussion</button><button type="button" onClick={() => quickAction("reschedule")}>{followUp ? "Reschedule follow-up" : "Schedule follow-up"}</button><button type="button" onClick={() => quickAction("status")}>Change status</button></div></details></div>
   </div>;
