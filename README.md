@@ -38,7 +38,7 @@ Add a lead with just a name. Company and phone are optional, and the status star
 
 - **Core flows:** lead list, all six status filters, today's pinned follow-ups, timeline dialog, discussion creation, follow-up scheduling, and persistent status updates.
 - **All listed bonuses:** name search, red overdue reminders, Docker Compose, a seed script with 25 leads and 39 discussions, and filters.
-- **Submission material:** public repository, `.env.example`, setup instructions, screenshots, and a recorded walkthrough with generated male narration, labels, and subtitles.
+- **Submission material:** public repository, `.env.example`, setup instructions, screenshots, and a recorded walkthrough with labels and subtitles.
 
 ## A few useful details
 
@@ -122,7 +122,7 @@ The five automated tests cover follow-up grouping, ordering, next-action selecti
 
 The screenshots below were captured from the current workspace on October 16, 2026. The demo contacts are fictional; relative times and follow-up groups change with the local date.
 
-[Watch the narrated walkthrough (2 min 58 sec)](https://github.com/BlackBeanEagles/pravar-leadflow/releases/download/leadflow-demo-2026-10-16/LeadFlow-demo.mp4). The video includes on-screen labels and subtitles. A separate `.srt` file is attached to the same release.
+[Watch the walkthrough (2 min 58 sec)](https://github.com/BlackBeanEagles/pravar-leadflow/releases/download/leadflow-demo-2026-10-16/LeadFlow-demo.mp4). The video includes on-screen labels and subtitles. A separate `.srt` file is attached to the same release.
 
 ## More screenshots
 
@@ -152,8 +152,8 @@ The screenshots below were captured from the current workspace on October 16, 20
 - The workspace photograph and portraits for the 25 fictional seed contacts are served as WebP assets to keep the page light. Leads added by a user display initials.
 - Login is optional to enable locally. It is a single shared workspace with one configured credential; add real user accounts and account scoping before deploying for customers.
 
-## Scope and AI assistance
+## Scope
 
 LeadFlow is a single shared workspace with an optional configured login. Separate user accounts, account-level data access, and email or push notifications would be further work. Follow-up reminders are displayed inside the app.
 
-AI was used to help draft the implementation and documentation and to create the financial-planning desk background and demo contact portraits. The walkthrough uses generated male narration with captions timed to that audio. The requirements were interpreted from the supplied brief, and the app was built, reviewed, and tested through its production build and working browser/API flows. The sample data and portraits are fictional.
+The sample data and contact portraits are fictional.
